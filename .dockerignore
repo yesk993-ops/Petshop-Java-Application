@@ -1,0 +1,17 @@
+**/.git
+**/.gitignore
+**/.mvn
+**/target
+**/node_modules
+**/dist
+**/.idea
+**/*.iml
+**/.project
+**/.classpath
+**/.settings
+**/logs
+**/*.log
+**/tmp
+**/.dockerignore
+**/Dockerfile
+**/README.md

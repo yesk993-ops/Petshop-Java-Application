@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: petshop-service
+spec:
+  selector:
+    app: petshop
+  ports:
+  - port: 80
+    targetPort: 8080
+  type: ClusterIP
