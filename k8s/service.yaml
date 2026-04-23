@@ -7,5 +7,5 @@ spec:
     app: petshop
   ports:
   - port: 80
-    targetPort: 8080
-  type: ClusterIP
+    targetPort: 8081
+  type: NodePort

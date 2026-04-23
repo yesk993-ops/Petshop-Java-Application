@@ -1,2 +1,4 @@
 com/petshop/PetshopApplication.class
 com/petshop/controller/PetController.class
+com/petshop/config/SecurityConfig.class
+com/petshop/controller/HomeController.class

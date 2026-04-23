@@ -14,6 +14,36 @@ The application is a simple REST API for managing pets (CRUD operations). It's b
 - CI/CD pipeline with GitHub Actions
 - Security scanning (SAST, DAST, container scanning)
 
+## Quick Start
+
+### 1. Clone the repository
+```bash
+git clone <repository-url>
+cd petshop
+```
+
+### 2. Build and run locally with Docker
+```bash
+docker build -t mydocker3692/petshop:latest .
+docker run -p 8080:8080 mydocker3692/petshop:latest
+```
+Access the API at `http://localhost:8080/api/pets`
+
+### 3. Deploy to Kubernetes
+Ensure you have a Kubernetes cluster running and `kubectl` configured.
+```bash
+kubectl apply -f k8s/deployment.yaml
+kubectl apply -f k8s/service.yaml
+kubectl apply -f k8s/ingress.yaml
+```
+Check deployment status:
+```bash
+kubectl get pods
+```
+
+### 4. Use CI/CD pipeline
+Push to the `main` branch to trigger the GitHub Actions pipeline that will build, test, scan, push to Docker Hub, and deploy automatically.
+
 ## Prerequisites
 
 - Java 17+
@@ -53,16 +83,38 @@ Open `http://localhost:8080/h2-console` (JDBC URL: `jdbc:h2:mem:testdb`, usernam
 
 ## Docker
 
+The Dockerfile uses Eclipse Temurin JDK 17 for building and JRE 17 for runtime.
+
 ### Build Docker Image
 
 ```bash
-docker build -t petshop:latest .
+docker build -t mydocker3692/petshop:latest .
 ```
 
-### Run Container
+### Run Container Locally
 
 ```bash
-docker run -p 8080:8080 petshop:latest
+docker run -p 8080:8080 mydocker3692/petshop:latest
+```
+
+### Push to Docker Hub
+
+1. Log in to Docker Hub:
+   ```bash
+   docker login
+   ```
+2. Push the image:
+   ```bash
+   docker push mydocker3692/petshop:latest
+   ```
+
+### Pull from Docker Hub
+
+If you want to run the pre‑built image directly from Docker Hub:
+
+```bash
+docker pull mydocker3692/petshop:latest
+docker run -p 8080:8080 mydocker3692/petshop:latest
 ```
 
 ## Kubernetes Deployment
@@ -97,27 +149,54 @@ kubectl port-forward service/petshop-service 8080:80
 
 ## CI/CD Pipeline
 
+### GitHub Actions
+
 The GitHub Actions workflow (`.github/workflows/ci-cd.yml`) includes:
 
 1. **Build and Test**: Compiles code, runs unit tests
 2. **Security Scanning**:
-   - SAST: SpotBugs for static code analysis
-   - Dependency Check: OWASP for vulnerability scanning
+   - SAST: OWASP Dependency Check for vulnerability scanning of dependencies
    - Container Scanning: Trivy for Docker image vulnerabilities
-3. **Docker Build**: Builds and pushes Docker image to Docker Hub
+3. **Docker Build**: Builds and pushes Docker image to Docker Hub as `mydocker3692/petshop:latest`
 4. **Kubernetes Deployment**: Deploys to Kubernetes cluster (requires secrets)
 
-### Required Secrets
+#### Required Secrets
 
 Set the following secrets in your GitHub repository:
 
-- `DOCKER_USERNAME`: Docker Hub username
-- `DOCKER_PASSWORD`: Docker Hub password/token
-- `KUBE_CONFIG`: Base64-encoded kubeconfig file
+- `DOCKER_USERNAME`: Your Docker Hub username (e.g., `mydocker3692`)
+- `DOCKER_PASSWORD`: Your Docker Hub password or access token
+- `KUBE_CONFIG`: Base64-encoded kubeconfig file (run `cat ~/.kube/config | base64 -w0`)
 
-### Manual Trigger
+#### Manual Trigger
 
 Push to `main` branch or create a pull request to trigger the pipeline.
+
+#### Pipeline Steps
+
+- **build-and-test**: Compiles Java code, runs unit tests.
+- **docker-build**: Builds Docker image and pushes to Docker Hub (only on push to main).
+- **security-scan**: Runs OWASP Dependency Check and Trivy container scan.
+- **deploy**: Applies Kubernetes manifests (requires KUBE_CONFIG secret).
+
+### Jenkins Pipeline
+
+For Jenkins-based CI/CD, the project includes a `Jenkinsfile` and a detailed setup guide (`jenkins-setup.md`).
+
+#### Features
+
+- Multi‑stage pipeline: Checkout, Build, Test, Security Scan, Docker Build, Push, Kubernetes Deploy, Smoke Test.
+- Integrated security scanning with OWASP Dependency Check and Trivy.
+- Notifications via email and Slack.
+- Docker image tagging with build number and `latest`.
+
+#### Setup
+
+1. Install required Jenkins plugins (list in `jenkins-setup.md`).
+2. Configure Docker Hub and Kubernetes credentials in Jenkins.
+3. Create a Pipeline job pointing to the `Jenkinsfile` in this repository.
+
+For complete instructions, see [jenkins-setup.md](jenkins-setup.md).
 
 ## Security Scanning
 
@@ -155,6 +234,8 @@ Push to `main` branch or create a pull request to trigger the pipeline.
 ├── .dockerignore
 ├── pom.xml                 # Maven configuration
 ├── mvnw, mvnw.cmd         # Maven wrapper
+├── Jenkinsfile             # Jenkins pipeline definition
+├── jenkins-setup.md        # Jenkins plugin and configuration guide
 └── README.md               # This file
 ```
 

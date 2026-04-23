@@ -1,2 +1,4 @@
+/home/test/data/src/main/java/com/petshop/config/SecurityConfig.java
 /home/test/data/src/main/java/com/petshop/PetshopApplication.java
 /home/test/data/src/main/java/com/petshop/controller/PetController.java
+/home/test/data/src/main/java/com/petshop/controller/HomeController.java

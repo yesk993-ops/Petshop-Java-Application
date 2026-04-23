@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetShop - Your Favorite Pets</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Fredoka+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <i class="fas fa-paw"></i>
+                <span>PetShop</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#pets">Our Pets</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="cart">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </div>
+        </nav>
+        <div class="hero" id="home">
+            <div class="hero-content">
+                <h1 class="animate__animated animate__fadeInDown">Welcome to <span class="highlight">PetShop</span></h1>
+                <p class="animate__animated animate__fadeInUp">Find your perfect furry friend! We offer a variety of adorable pets with love and care.</p>
+                <button class="cta-button animate__animated animate__pulse animate__infinite">Adopt Now <i class="fas fa-heart"></i></button>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Happy Pets" class="animate__animated animate__bounceIn">
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Featured Pets Carousel -->
+        <section class="featured-section">
+            <h2>Featured Pets</h2>
+            <p class="section-subtitle">Check out our most popular pets this week!</p>
+            <div class="carousel" id="featuredCarousel">
+                <div class="carousel-item">
+                    <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Golden Retriever">
+                    <h3>Max</h3>
+                    <p>Friendly Golden Retriever, loves kids</p>
+                </div>
+                <div class="carousel-item">
+                    <img src="https://images.unsplash.com/photo-1514888286974-6d03bde4ba48?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Persian Cat">
+                    <h3>Luna</h3>
+                    <p>Calm Persian cat, perfect for apartments</p>
+                </div>
+                <div class="carousel-item">
+                    <img src="https://images.unsplash.com/photo-1522926193341-e9ffd686c60f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Parrot">
+                    <h3>Rio</h3>
+                    <p>Colorful parrot, can mimic words</p>
+                </div>
+                <div class="carousel-item">
+                    <img src="https://images.unsplash.com/photo-1524704654690-b56c05c78a00?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Goldfish">
+                    <h3>Bubbles</h3>
+                    <p>Beautiful goldfish, low maintenance</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="pets-section" id="pets">
+            <h2>Meet Our Pets</h2>
+            <p class="section-subtitle">Each pet is unique and waiting for a loving home.</p>
+            <div class="pets-container" id="petsContainer">
+                <!-- Pets will be loaded dynamically via JavaScript -->
+            </div>
+            <div class="controls">
+                <button id="loadPets" class="btn-primary"><i class="fas fa-paw"></i> Load Pets</button>
+                <button id="addPet" class="btn-secondary"><i class="fas fa-plus"></i> Add New Pet</button>
+            </div>
+        </section>
+
+        <section class="about" id="about">
+            <h2>Why Choose PetShop?</h2>
+            <div class="features">
+                <div class="feature-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Health Guaranteed</h3>
+                    <p>All pets are vet‑checked and vaccinated.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-home"></i>
+                    <h3>Happy Home Ready</h3>
+                    <p>Pets are socialized and ready for adoption.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-headset"></i>
+                    <h3>24/7 Support</h3>
+                    <p>Our team is always here to help you.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="contact" id="contact">
+            <h2>Get In Touch</h2>
+            <form id="contactForm">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Email Address" required>
+                <textarea placeholder="Your Message" rows="4"></textarea>
+                <button type="submit" class="btn-primary">Send Message</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2023 PetShop. All rights reserved. Made with <i class="fas fa-heart"></i> for pet lovers.</p>
+        <div class="social">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+    </footer>
+
+    <!-- Modal for adding a pet -->
+    <div class="modal" id="addPetModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Add a New Pet</h3>
+            <form id="addPetForm">
+                <input type="number" id="petId" placeholder="Pet ID" required>
+                <input type="text" id="petName" placeholder="Pet Name" required>
+                <select id="petType">
+                    <option value="Dog">Dog</option>
+                    <option value="Cat">Cat</option>
+                    <option value="Bird">Bird</option>
+                    <option value="Fish">Fish</option>
+                    <option value="Rabbit">Rabbit</option>
+                </select>
+                <button type="submit" class="btn-primary">Add Pet</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/script.js"></script>
+</body>
+</html>

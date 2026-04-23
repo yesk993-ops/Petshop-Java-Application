@@ -1,5 +1,5 @@
-# Use official OpenJDK 17 runtime as base image
-FROM openjdk:17-jdk-slim AS builder
+# Use official Eclipse Temurin JDK 17 as base image
+FROM eclipse-temurin:17-jdk AS builder
 
 # Set working directory
 WORKDIR /app
@@ -16,7 +16,7 @@ COPY src src
 RUN ./mvnw clean package -DskipTests
 
 # Second stage: runtime
-FROM openjdk:17-jre-slim
+FROM eclipse-temurin:17-jre
 
 # Set working directory
 WORKDIR /app
@@ -24,8 +24,8 @@ WORKDIR /app
 # Copy the built jar from builder stage
 COPY --from=builder /app/target/*.jar app.jar
 
-# Expose port 8080
-EXPOSE 8080
+# Expose port 8081
+EXPOSE 8081
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
