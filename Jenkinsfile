@@ -17,12 +17,13 @@ pipeline {
         }
 
         stage('Build & Test') {
-            steps {
-                sh './mvnw clean verify -q'
-                junit '**/surefire-reports/*.xml'
-                junit '**/failsafe-reports/*.xml', allowEmptyResults: true
-            }
-        }
+    steps {
+        sh './mvnw clean verify -q'
+
+        junit testResults: '**/surefire-reports/*.xml'
+        junit testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true
+    }
+}
 
         stage('SonarQube Analysis') {
             steps {
