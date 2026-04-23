@@ -26,7 +26,9 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_TOKEN')]) {
+                withCredentials([
+                    string(credentialsId: 'sonarqube', variable: 'SONAR_TOKEN')
+                ]) {
                     sh '''
                         ./mvnw sonar:sonar \
                           -Dsonar.host.url=$SONAR_HOST_URL \
@@ -48,7 +50,8 @@ pipeline {
                     )
                 ]) {
                     sh '''
-                        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin $DOCKER_REGISTRY
+                        docker logout || true
+                        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin docker.io
                         docker build -t $DOCKER_IMAGE:$DOCKER_TAG -t $DOCKER_IMAGE:latest .
                         docker push $DOCKER_IMAGE:$DOCKER_TAG
                         docker push $DOCKER_IMAGE:latest
@@ -60,7 +63,9 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                withCredentials([
+                    file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')
+                ]) {
                     sh '''
                         kubectl apply -f k8s/deployment.yaml
                         kubectl rollout status deployment/petshop-deployment --timeout=120s
@@ -76,10 +81,10 @@ pipeline {
             cleanWs()
         }
         failure {
-            echo '❌ Pipeline failed'
+            echo 'Pipeline failed'
         }
         success {
-            echo '✅ Pipeline completed successfully'
+            echo 'Pipeline succeeded'
         }
     }
 }
