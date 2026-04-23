@@ -66,7 +66,8 @@ pipeline {
             steps {
                 sh '''
                     kubectl apply -f k8s/deployment.yaml
-                    kubectl rollout status deployment/petshop-deployment --timeout=120s
+                    kubectl apply -f k8s/service.yaml
+                    kubectl rollout status deployment/petshop-deployment --timeout=60
                 '''
             }
         }
