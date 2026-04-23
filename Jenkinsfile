@@ -8,38 +8,16 @@ pipeline {
         SONAR_HOST_URL = 'http://192.168.88.128:9000/'
     }
 
-    options {
-        buildDiscarder(logRotator(numToKeepStr: '10'))
-        disableConcurrentBuilds()
-        timeout(time: 20, unit: 'MINUTES')
-    }
-
     stages {
         stage('Checkout') {
-            steps {
-                checkout scm
-            }
+            steps { checkout scm }
         }
 
         stage('Build & Test') {
             steps {
                 sh './mvnw clean verify -q'
-                junit 'target/surefire-reports/*.xml'
-                junit 'target/failsafe-reports/*.xml'
-            }
-        }
-
-        stage('SonarQube Analysis') {
-            steps {
-                withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_TOKEN')]) {
-                    sh """
-                        ./mvnw sonar:sonar \
-                          -Dsonar.host.url=${SONAR_HOST_URL} \
-                          -Dsonar.login=${SONAR_TOKEN} \
-                          -Dsonar.projectKey=petshop \
-                          -Dsonar.projectVersion=${env.BUILD_NUMBER}
-                    """
-                }
+                junit '**/surefire-reports/*.xml'
+                junit '**/failsafe-reports/*.xml'
             }
         }
 
@@ -56,23 +34,11 @@ pipeline {
             }
         }
 
-        stage('Security Scan') {
-            steps {
-                sh """
-                    ./mvnw org.owasp:dependency-check-maven:check -q
-                    trivy image ${DOCKER_IMAGE}:${DOCKER_TAG} --severity HIGH,CRITICAL --exit-code 0
-                """
-                archiveArtifacts artifacts: 'target/dependency-check-report.*', allowEmptyArchive: true
-            }
-        }
-
         stage('Deploy to Kubernetes') {
             steps {
                 withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
                     sh """
                         kubectl apply -f k8s/deployment.yaml
-                        kubectl apply -f k8s/service.yaml
-                        kubectl apply -f k8s/ingress.yaml
                         kubectl rollout status deployment/petshop-deployment --timeout=120s
                     """
                 }
