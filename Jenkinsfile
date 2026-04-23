@@ -62,11 +62,5 @@ pipeline {
             cleanWs()
             archiveArtifacts artifacts: 'target/*.jar', allowEmptyArchive: true
         }
-        success {
-            slackSend(color: 'good', message: "Build ${env.BUILD_NUMBER} succeeded for ${env.JOB_NAME}")
-        }
-        failure {
-            slackSend(color: 'danger', message: "Build ${env.BUILD_NUMBER} failed for ${env.JOB_NAME}")
-        }
     }
 }
