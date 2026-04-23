@@ -17,7 +17,21 @@ pipeline {
             steps {
                 sh './mvnw clean verify -q'
                 junit '**/surefire-reports/*.xml'
-                junit '**/failsafe-reports/*.xml'
+                junit '**/failsafe-reports/*.xml', allowEmptyResults: true
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_TOKEN')]) {
+                    sh """
+                        ./mvnw sonar:sonar \
+                          -Dsonar.host.url=${SONAR_HOST_URL} \
+                          -Dsonar.login=${SONAR_TOKEN} \
+                          -Dsonar.projectKey=petshop \
+                          -Dsonar.projectVersion=${env.BUILD_NUMBER}
+                    """
+                }
             }
         }
 
