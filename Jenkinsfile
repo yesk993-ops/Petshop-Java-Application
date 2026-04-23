@@ -17,13 +17,13 @@ pipeline {
         }
 
         stage('Build & Test') {
-    steps {
-        sh './mvnw clean verify -q'
+            steps {
+                sh './mvnw clean verify -q'
 
-        junit testResults: '**/surefire-reports/*.xml'
-        junit testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true
-    }
-}
+                junit testResults: '**/surefire-reports/*.xml'
+                junit testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true
+            }
+        }
 
         stage('SonarQube Analysis') {
             steps {
@@ -64,14 +64,10 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                withCredentials([
-                    file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')
-                ]) {
-                    sh '''
-                        kubectl apply -f k8s/deployment.yaml
-                        kubectl rollout status deployment/petshop-deployment --timeout=120s
-                    '''
-                }
+                sh '''
+                    kubectl apply -f k8s/deployment.yaml
+                    kubectl rollout status deployment/petshop-deployment --timeout=120s
+                '''
             }
         }
     }
